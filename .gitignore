@@ -4,6 +4,19 @@
 *.dll
 *.so
 *.dylib
+.git
+/.git
+ginger
+/ginger
+
+# about ide
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Test binary, built with `go test -c`
 *.test
