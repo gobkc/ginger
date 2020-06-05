@@ -24,3 +24,5 @@ Package of gin framework
 5.数据库工具
 
 6.日志处理
+
+7.swagger集成
