@@ -1,4 +1,4 @@
-package middleware
+package ginger
 
 import (
 	"compress/gzip"
@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	DefaultExcludedExtentions = NewExcludedExtensions([]string{
+	DefaultExcludedExtensions = NewExcludedExtensions([]string{
 		".png", ".gif", ".jpeg", ".jpg",
 	})
 	DefaultOptions = &Options{
-		ExcludedExtensions: DefaultExcludedExtentions,
+		ExcludedExtensions: DefaultExcludedExtensions,
 	}
 )
 

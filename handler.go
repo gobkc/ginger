@@ -1,15 +1,14 @@
-package middleware
+package ginger
 
 import (
 	"compress/gzip"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"strings"
 	"sync"
-
-	"github.com/gin-gonic/gin"
 )
 
 type gzipHandler struct {
