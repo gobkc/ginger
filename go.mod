@@ -1,4 +1,4 @@
-module ginger
+module github.com/gobkc/ginger
 
 go 1.14
 
