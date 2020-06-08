@@ -5,7 +5,10 @@ import (
 	_ "github.com/gobkc/ginger/docs"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"google.golang.org/grpc"
 	"log"
+	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -65,4 +68,36 @@ func (g *Ginger) Start(addr string) {
 		cRoute.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	g.App.Run(addr)
+}
+
+func (g *Ginger) Run(addr string, f ...func(server *grpc.Server)) (err error) {
+	mux := g.GetHTTPServeMux()
+	server := grpc.NewServer()
+	err = http.ListenAndServe(addr,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
+				if len(f) != 1 {
+					log.Fatalln("too many parameters ")
+				}
+				log.Println("Listening and serving GRPC on ", addr)
+				//注册服务
+				f[0](server)
+				server.ServeHTTP(w, r)
+			} else {
+				log.Println("Listening and serving HTTP on ", addr)
+				mux.ServeHTTP(w, r)
+			}
+			return
+		}),
+	)
+	return err
+}
+
+func (g *Ginger) GetHTTPServeMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("eddycjy: go-grpc-example"))
+	})
+
+	return mux
 }

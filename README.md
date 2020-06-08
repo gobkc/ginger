@@ -11,6 +11,10 @@ Package of gin framework
 
     https://github.com/gin-contrib/gzip
 
+3.swagger
+
+    github.com/swaggo/gin-swagger
+
 > Wish list
 
 1.gzip yes
@@ -25,7 +29,7 @@ Package of gin framework
 
 6.日志处理 ES，FILE支持 no
 
-7.swagger集成 no
+7.swagger集成 yes
 
 8.socket和ws协议集成 no
 
