@@ -33,6 +33,6 @@ Package of gin framework
 
 8.socket和ws协议集成 no
 
-9.grpc支持 no
+9.grpc支持 yes
 
 10.test单元测试，基准测试快速创建工具 no
