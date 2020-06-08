@@ -3,7 +3,19 @@ package ginger
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"sync"
 )
+
+var IGinger *Ginger
+var once sync.Once
+
+//单例模式获取实例
+func GetIns() *Ginger {
+	once.Do(func() {
+		IGinger = new(Ginger)
+	})
+	return IGinger
+}
 
 type Ginger struct {
 	App *gin.Engine
