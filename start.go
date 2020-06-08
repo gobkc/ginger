@@ -72,7 +72,7 @@ func (g *Ginger) Start(addr string) {
 }
 
 func (g *Ginger) Run(addr string, f ...func(server *grpc.Server)) (err error) {
-	mux := g.GetHTTPServeMux()
+	//mux := g.GetHTTPServeMux()
 	server := grpc.NewServer()
 	log.Println("监听并且开启 HTTP/GRPC 服务于", addr)
 	err = http.ListenAndServe(addr,
@@ -86,8 +86,8 @@ func (g *Ginger) Run(addr string, f ...func(server *grpc.Server)) (err error) {
 				f[0](server)
 				server.ServeHTTP(w, r)
 			} else {
-				log.Printf("%c[1;40;36m[gin-logger] %s   %s  %s%c[0m\n", 0x1B,r.Method,r.URL.Path,r.Proto,  0x1B)
-				mux.ServeHTTP(w, r)
+				g.App.ServeHTTP(w, r)
+				//mux.ServeHTTP(w, r)
 			}
 			return
 		}),
