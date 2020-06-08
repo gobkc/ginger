@@ -1,0 +1,17 @@
+info:
+  contact: {}
+  license: {}
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: hello world
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+swagger: "2.0"

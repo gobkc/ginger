@@ -2,6 +2,7 @@ package ginger
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/gobkc/ginger/docs"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"log"
