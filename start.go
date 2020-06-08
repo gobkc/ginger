@@ -67,24 +67,26 @@ func (g *Ginger) Start(addr string) {
 	if g.openSwagger {
 		cRoute.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
-	g.App.Run(addr)
+	//g.App.Run(addr)
+	g.Run(addr)
 }
 
 func (g *Ginger) Run(addr string, f ...func(server *grpc.Server)) (err error) {
 	mux := g.GetHTTPServeMux()
 	server := grpc.NewServer()
+	log.Println("监听并且开启 HTTP/GRPC 服务于", addr)
 	err = http.ListenAndServe(addr,
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
 				if len(f) != 1 {
-					log.Fatalln("too many parameters ")
+					log.Fatalln("参数太多 ")
 				}
 				log.Println("Listening and serving GRPC on ", addr)
 				//注册服务
 				f[0](server)
 				server.ServeHTTP(w, r)
 			} else {
-				log.Println("Listening and serving HTTP on ", addr)
+				log.Printf("%c[1;40;36m[gin-logger] %s   %s  %s%c[0m\n", 0x1B,r.Method,r.URL.Path,r.Proto,  0x1B)
 				mux.ServeHTTP(w, r)
 			}
 			return
