@@ -11,7 +11,7 @@ Package of gin framework
 
     https://github.com/gin-contrib/gzip
 
-> 即将实现的功能清单
+> Wish list
 
 1.gzip
 
