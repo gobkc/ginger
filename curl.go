@@ -173,6 +173,11 @@ func (h *Curl) Bind(data interface{}) error {
 		return err
 	}
 
+	//清除参数
+	defer func() {
+		h = nil
+	}()
+
 	//断言 确保data的传入值为结构体地址 没写完
 	switch data.(type) {
 	case string:
@@ -210,6 +215,11 @@ func (h *Curl) BindString(data interface{}) error {
 	if err = h.request(); err != nil {
 		return err
 	}
+
+	//清除参数
+	defer func() {
+		h = nil
+	}()
 
 	//断言 确保data的传入值为字符串地址 没写完
 	switch data.(type) {

@@ -42,7 +42,7 @@ Package of gin framework
 >使用方式
 
     export GOPROXY=https://mirrors.aliyun.com/goproxy
-    go mod edit -require github.com/gobkc/ginger@v0.0.8
+    go mod edit -require github.com/gobkc/ginger@v0.0.9
     go mod tidy
     go mod vendor
 
