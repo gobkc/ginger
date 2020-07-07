@@ -100,9 +100,15 @@ func (o *Orm) SaveAll(data interface{}) error {
 	var fName string
 	dataType := reflect.TypeOf(element.Index(0).Interface())
 	var fnTypes []string
+	var gormTags []string
 	for i := 0; i < element.Index(0).NumField(); i++ {
 		fName = dataType.Field(i).Name
 		defaultTag := dataType.Field(i).Tag.Get("json")
+		gormTag := dataType.Field(i).Tag.Get("gorm")
+		if gormTag=="-"{
+			continue
+		}
+		gormTags = append(gormTags,gormTag)
 		fName = dataType.Field(i).Name
 		if defaultTag != ""{
 			fName = defaultTag
@@ -118,6 +124,10 @@ func (o *Orm) SaveAll(data interface{}) error {
 		rowKeyLen := element.Index(i).NumField()
 		rowValue = []string{}
 		for rowKey := 0; rowKey < rowKeyLen; rowKey++ {
+			gormTag := gormTags[rowKey]
+			if gormTag=="-"{
+				continue
+			}
 			fnType := fnTypes[rowKey]
 			var rowV interface{}
 			if fnType=="time.Time"{
