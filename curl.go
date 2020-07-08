@@ -166,44 +166,17 @@ func (h *Curl) request() error {
 	return nil
 }
 
-//绑定参数
+//Bind 绑定结构体
 func (h *Curl) Bind(data interface{}) error {
 	//发送请求
 	if err := h.request(); err != nil {
 		return err
 	}
 
-	//清除参数
-	defer func() {
-		h = nil
-	}()
-
-	//断言 确保data的传入值为结构体地址 没写完
-	switch data.(type) {
-	case string:
-	case int:
-	case bool:
-	case struct{}:
-		return errors.New("只能传递结构体的地址")
-		break
-	}
-
-	//如果是地址，获取真实的指针
-	var dataElem = reflect.ValueOf(data).Elem()
-
-	//获取真实的interface,而不是*interface
-	realData := dataElem.Interface()
-	if err := json.Unmarshal(h.result, realData); err != nil {
+	if err := json.Unmarshal(h.result, data); err != nil {
 		log.Println(err)
 	}
 
-	var buf bytes.Buffer
-	if err := gob.NewEncoder(&buf).Encode(realData); err != nil {
-		return err
-	}
-	if err := gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(data); err != nil {
-		return err
-	}
 	return nil
 }
 
