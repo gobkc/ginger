@@ -46,20 +46,20 @@ func (h *Curl) Url(uri string) *Curl {
 	return h
 }
 
-//basic auth
+//Auth 设置auth
 func (h *Curl) Auth(username string, password string) *Curl {
 	h.userName = username
 	h.passWord = password
 	return h
 }
 
-//basic auth
+//ContentType 设置ContentType
 func (h *Curl) ContentType(contentType string) *Curl {
 	h.contentType = contentType
 	return h
 }
 
-//basic auth
+//Header 设置header
 func (h *Curl) Header(headerKey string, headerValue string) *Curl {
 	h.headers = append(h.headers, Headers{
 		headerKey:   headerKey,
@@ -113,6 +113,15 @@ func (h *Curl) Head(data ...interface{}) *Curl {
 //PATCH请求
 func (h *Curl) Patch(data ...interface{}) *Curl {
 	h.method = "PATCH"
+	if len(data) == 1 {
+		h.requestData = data[0]
+	}
+	return h
+}
+
+//DELETE请求
+func (h *Curl) Delete(data ...interface{}) *Curl {
+	h.method = "DELETE"
 	if len(data) == 1 {
 		h.requestData = data[0]
 	}
