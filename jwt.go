@@ -31,7 +31,7 @@ const ErrorReLogin = "登录过期或登录错误，请重新登录"
 func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var token string
-		if tmp, ok := c.Request.Header["Authorization"]; ok {
+		if tmp, ok := c.Request.Header["Authorization"]; ok && len(tmp)>=7 {
 			token = tmp[0][7:]
 		}
 		claim, err := Verify(token)
