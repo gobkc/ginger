@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 	"testing"
 )
 
@@ -82,5 +83,14 @@ func TestYamlFunc(t *testing.T) {
 		t.Error("parser deal not ok")
 	} else {
 		t.Log("parse deal ok")
+	}
+}
+
+func TestConfileNotExists(t *testing.T) {
+	notExistsFile := "notExists.yml"
+	os.Remove(notExistsFile)
+	var conf MutiConf
+	if err := JSONReadFileAndUnmarshal(&conf, notExistsFile); !os.IsNotExist(err) {
+		t.Error("it should give a file not exists error")
 	}
 }

@@ -27,13 +27,13 @@ func (parser *jsonParser) Marshal(conf interface{}, toFile string) (err error) {
 
 // JSONReadFileAndUnmarshal 集成读取文件和反序列化操作
 func JSONReadFileAndUnmarshal(conf interface{}, fromFile string) error {
+	if _, err := os.Stat(fromFile); os.IsNotExist(err) {
+		YamlMarshalAndWriteFile(conf, fromFile)
+		return err
+	}
+
 	data, err := ioutil.ReadFile(fromFile)
 	if err != nil {
-		if _, ok := err.(*os.PathError); ok {
-			//fmt.Println("os.PathError", err)
-			JSONMarshalAndWriteFile(conf, fromFile)
-			return nil
-		}
 		return err
 	}
 	if err = json.Unmarshal(data, conf); err != nil {
