@@ -41,6 +41,8 @@ Package of gin framework
 
 12.yaml库支持 https://github.com/gobkc/ginger/blob/master/config/yaml.md yes
 
+13.阿里云短信支持 https://github.com/gobkc/ginger/blob/master/ali-sms.md yes
+
 >使用方式
 
     export GOPROXY=https://mirrors.aliyun.com/goproxy
