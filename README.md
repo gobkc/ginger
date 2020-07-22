@@ -39,6 +39,8 @@ Package of gin framework
 
 11.curl库支持
 
+12.yaml库支持 https://github.com/gobkc/ginger/blob/master/config/yaml.md yes
+
 >使用方式
 
     export GOPROXY=https://mirrors.aliyun.com/goproxy
