@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" //导入MYSQL
 	"log"
+	"math"
 	"reflect"
 	"strings"
 	"time"
@@ -19,6 +20,41 @@ type Orm struct {
 	port     int
 	dbname   string
 	*gorm.DB
+}
+
+//Pager 分页继承类
+type Pager gorm.DB
+
+//Page 分页
+func (p *Pager) Page(page int, pageSize int, total *int, pageNum *int) *gorm.DB {
+	db := gorm.DB(*p)
+	orm := &db
+
+	//当前页不允许为0
+	if page == 0 {
+		page = 1
+	}
+	if pageSize == 0{
+		pageSize = 10
+	}
+
+	//间隔多少页
+	var offset = (page - 1) * pageSize
+
+	orm.Count(total)
+	orm = orm.Offset(offset).Limit(pageSize)
+	*pageNum = p.getPageNum(pageSize, *total)
+
+	return orm
+}
+
+//getPageNum
+func (p *Pager) getPageNum(pageSize int, total int) int {
+	var pageNum float64
+	if pageSize != 0 {
+		pageNum = math.Ceil(float64(total) / float64(pageSize))
+	}
+	return int(pageNum)
 }
 
 //SetDbname 设置数据库名称
@@ -71,7 +107,7 @@ func (o *Orm) Register() *Orm {
 	return o
 }
 
-//AddAll 添加多行数据
+//SaveAll 添加多行数据
 func (o *Orm) SaveAll(data interface{}) error {
 	isPtr := reflect.TypeOf(data).Kind().String() == "ptr"
 	if !isPtr {
@@ -84,7 +120,7 @@ func (o *Orm) SaveAll(data interface{}) error {
 	//获取interface的元素,因为上面已经判定它必定是一个地址了
 	element := reflect.ValueOf(data).Elem()
 	eleLen := element.Len()
-	if eleLen<1{
+	if eleLen < 1 {
 		return errors.New("没有需要添加的数据")
 	}
 	//取出第一行数据，用来获取表名
@@ -104,13 +140,13 @@ func (o *Orm) SaveAll(data interface{}) error {
 		fName = dataType.Field(i).Name
 		defaultTag := dataType.Field(i).Tag.Get("json")
 		fName = dataType.Field(i).Name
-		if defaultTag != ""{
+		if defaultTag != "" {
 			fName = defaultTag
-		}else{
+		} else {
 			fName = o.snakeString(fName)
 		}
 		fnType := dataType.Field(i).Type.String()
-		fnTypes = append(fnTypes,fnType)
+		fnTypes = append(fnTypes, fnType)
 		fieldsArr = append(fieldsArr, fmt.Sprintf("`%s`", fName))
 		updateFieldsArr = append(updateFieldsArr, fmt.Sprintf("%s = VALUES(%s)", fName, fName))
 	}
@@ -120,13 +156,13 @@ func (o *Orm) SaveAll(data interface{}) error {
 		for rowKey := 0; rowKey < rowKeyLen; rowKey++ {
 			fnType := fnTypes[rowKey]
 			var rowV interface{}
-			if fnType=="time.Time"{
+			if fnType == "time.Time" {
 				rowV = time.Now().Format("2006-01-02 15:04:05")
-			} else if fnType=="*time.Time"{
+			} else if fnType == "*time.Time" {
 				rowV = "NULL"
 				rowValue = append(rowValue, fmt.Sprintf("%v", rowV))
 				continue
-			}else{
+			} else {
 				rowV = element.Index(i).Field(rowKey).Interface()
 			}
 			rowValue = append(rowValue, fmt.Sprintf("'%v'", rowV))
